@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.File;
 
@@ -278,6 +280,15 @@ class RBT
 	    }
 	    return n;
 	  }
+	
+	public Node Tree_maximum(Node n)
+	{
+	    while(n.right.val != 0)
+	    {
+	      n = n.right;
+	    }
+	    return n;
+	  }
 
 	public void RBT_Trans(Node u, Node v)
 	{
@@ -304,8 +315,34 @@ class RBT
 	    else
 	      return tree_search(tree.right,val);
   	}
+	 	 
 
+	 public Node Successor(Node x)
+	 {
+		 if (x.right.val != 0)
+			 return Tree_minimum(x.right);
+		 Node y = x.p;
+		 while( y.val != 0 & x==y.right)
+		 {
+			 x = y;
+			 y = y.p;
+		 }
+		 return y;
+	 }
 
+	 public Node Predecessor(Node x)
+	 {
+		 if (x.left.val != 0)
+			 return Tree_maximum(x.left);
+		 Node y = x.p;
+		 while( y.val != 0 & x==y.left)
+		 {
+			 x = y;
+			 y = y.p;
+		 }
+		 return y;
+		 
+	 }
   	public void inorder(Node tree) 
   	{
     	if (tree.val == 0)
@@ -400,15 +437,101 @@ public class main
 			            else break;
 			        }
 			        br.close();
-			        System.out.println("filename = "+file_name);
+			        
+			        BufferedReader sr = new BufferedReader(new FileReader("search.txt"));
+			        while(true)
+			        {
+			        	String line = sr.readLine();
+			        	if (line == null) break;
+			            int num = Integer.parseInt(line.trim());
+			            if (num > 0)
+			            {
+			            	BufferedWriter op = new BufferedWriter(new FileWriter("output.txt", true));
+			            	
+			            	Node n;
+			            	n = RBInst.tree_search(RBInst.root, num);
+			            	if(n.val == 0)
+			            	{
+			            		RBInst.RBT_insert(new Node(num));
+			            		n = RBInst.tree_search(RBInst.root, num);
+			            		if(RBInst.Predecessor(n).val == 0)
+			            		{
+			            			System.out.print("NIL NIL ");
+			            			op.write("NIL NIL ");
+				            		op.flush();
+			            		}
+			            		else
+			            		{
+			            			System.out.print(RBInst.Predecessor(n).val+" NIL ");
+			            			op.write(RBInst.Predecessor(n).val+" NIL ");
+				            		op.flush();
+			            		}
+			            		if(RBInst.Successor(n).val == 0)
+			            		{
+			            			System.out.println("NIL");
+			            			op.write("NIL");
+				            		op.flush();
+			            		}
+			            		else
+			            		{
+			            			System.out.println(RBInst.Successor(n).val);
+			            			op.write(RBInst.Successor(n).val);
+				            		op.flush();
+			            		}	
+			            		RBInst.RBT_delete(n);
+			            	}
+			            	else
+			            	{
+			            		Node k = RBInst.Predecessor(n);
+			            		if(k.val == 0)
+			            		{
+			            			System.out.print("NIL ");
+			            			op.write("NIL ");
+			            			op.flush();
+			            		}
+			           
+			            		else
+			            		{
+			            			System.out.print(k.val + " ");
+			            			op.write(k.val + " ");
+			            			op.flush();
+			            		}
+			            			System.out.print(n.val+" ");
+			            			op.write(n.val+" ");
+			            			op.flush();
+			            		if(RBInst.Successor(n).val ==0)
+			            		{
+			            			System.out.println("NIL");
+			            			op.write("NIL");
+			            			op.newLine();
+			            			op.flush();
+			            		}
+			            		
+			            		else
+			            		{
+			            			System.out.println(RBInst.Successor(n).val);
+			            			op.write(RBInst.Successor(n).val);
+			            			op.newLine();
+			            			op.flush();
+			            		}
+			            			
+			           		}
+			            	
+			            	op.close();
+			            }
+			            else break;
+			        }
+			        sr.close();
+			        
+			        
+			       /* System.out.println("filename = "+file_name);
 			        System.out.println("total = " + total_Node);
 			        System.out.println("insert = "+ insert_Node);
 			        System.out.println("delete = "+delete_Node);
 			        System.out.println("miss = "+miss_Node);
 			        System.out.println("nb = " + RBInst.Black_Node_Count(RBInst.root));
 			        System.out.println("bh = " + RBInst.BlackHeight(RBInst.root));
-			        RBInst.inorder(RBInst.root);
-				}
+			        RBInst.inorder(RBInst.root);*/				}
 				
 			}
 
